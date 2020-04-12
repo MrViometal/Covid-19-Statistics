@@ -13,7 +13,7 @@ class DropDownMenu extends Component {
         <Combobox
           openOnFocus
           items={items}
-          width={400}
+          width={300}
           initialSelectedItem={'WORLD'}
           onChange={(country) => select(country)}
           autocompleteProps={{}}

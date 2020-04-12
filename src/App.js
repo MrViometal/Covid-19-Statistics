@@ -122,29 +122,44 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <DropDownMenu
-        items={filterUniqueItems(rawData)}
-        select={onCountrySelect}
-      />
+    <Pane className='App'>
+      <Pane className='App-header'>
+        <Pane className='DDM'>
+          <DropDownMenu
+            items={filterUniqueItems(rawData)}
+            select={onCountrySelect}
+          />
+        </Pane>
 
-      <Radio radioSelected={handleRadioSelected} radio={radio} />
+        <Pane className='Radio'>
+          <Radio
+            radioSelected={handleRadioSelected}
+            radio={radio}
+            className='Radio'
+          />
+        </Pane>
+      </Pane>
 
-      <Pane style={{ width: 1250, height: 400, marginLeft: 10 }}>
+      <Pane
+        style={{ width: 1250, height: 400, marginLeft: 10 }}
+        className='Chart'
+      >
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
       </Pane>
 
-      {filteredChartData && (
-        <Slider
-          select={onSliderChange}
-          max={maxSlider}
-          value={sliderValue}
-          date={filteredChartData[0].data[0].x}
-        />
-      )}
+      <Pane className='Slider'>
+        {filteredChartData && (
+          <Slider
+            select={onSliderChange}
+            max={maxSlider}
+            value={sliderValue}
+            date={filteredChartData[0].data[0].x}
+          />
+        )}
+      </Pane>
 
       {rawData && <RGLMap data={formMapData(sumOfCasesValues(rawData))} />}
-    </div>
+    </Pane>
   );
 }
 export default App;
