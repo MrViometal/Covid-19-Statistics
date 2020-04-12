@@ -19,6 +19,7 @@ const MyResponsiveLine = ({ data }) => (
       stacked: false,
       reverse: false,
     }}
+    curve='basis'
     axisTop={null}
     axisRight={null}
     axisBottom={{
@@ -46,6 +47,9 @@ const MyResponsiveLine = ({ data }) => (
     pointBorderColor={{ from: 'serieColor' }}
     pointLabel='y'
     pointLabelYOffset={-12}
+    enableArea={true}
+    areaBlendMode='luminosity'
+    areaOpacity={0.25}
     useMesh={true}
     legends={[
       {
