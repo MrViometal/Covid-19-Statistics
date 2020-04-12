@@ -24,23 +24,55 @@ import data from './disposables/data.json';
 function App() {
   const [csvData, setcsvData] = React.useState(null);
   const [rawData, setRawData] = React.useState(null);
+  const [baseChartData, setBaseChartData] = React.useState(null);
+  const [filteredChartData, setFilteredChartData] = React.useState(null);
+  /* ***************************************************************** */
 
+  const handleRadioSelected = (value) => {
+    if (value == 'log') {
+      let currentData = JsonlogFormatter(csvData).filter(
+        (obj) => obj.id === filteredChartData[0].id
+      );
+      setBaseChartData(currentData);
+      setFilteredChartData(currentData);
+    } else if (value == 'dydx') {
+      let currentData = JsondydxFormatter(csvData).filter(
+        (obj) => obj.id === filteredChartData[0].id
+      );
+      setBaseChartData(currentData);
+      setFilteredChartData(currentData);
+    } else if (value == 'raw') {
+      let currentData = JsonFormatter(csvData).filter(
+        (obj) => obj.id === filteredChartData[0].id
+      );
+      setBaseChartData(currentData);
+      setFilteredChartData(currentData);
+    }
+  };
+
+  //basic on mount world data filter for first time
+  const filterWorldData = (data) => {
+    let result = data.filter((obj) => obj.id === 'WORLD');
+    setBaseChartData(result);
+    return result;
+  };
+
+  //Turn CSV into JSON and setChartData with it
   const TurnCSVintoSmthUseful = () => {
     let rawData = csv('time_series_covid19_deaths_global.csv').then((data) => {
       setcsvData(data);
-      {
-        console.log(
-          'log',
-          JsonlogFormatter(data),
-          'diff',
-          JsondydxFormatter(data)
-        );
-      }
-      setRawData(JsonFormatter(data));
+      const raw = JsonFormatter(data);
+      // FIXME:
+      setRawData(raw);
+      setBaseChartData(filterWorldData(raw));
+      setFilteredChartData(filterWorldData(raw));
+
       return JsonFormatter(data);
     });
     return rawData;
   };
+
+  /* ***************************************************************** */
 
   React.useEffect(() => {
     TurnCSVintoSmthUseful();
@@ -49,6 +81,7 @@ function App() {
   return (
     <div>
       <DropDownMenu items={filterUniqueItems(rawData)} />
+      <Radio radioSelected={handleRadioSelected} />
     </div>
   );
 }

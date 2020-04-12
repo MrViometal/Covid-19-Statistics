@@ -9,6 +9,7 @@ export default function RadioButtonsGroup({ radioSelected }) {
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
+    radioSelected(event.target.value);
   };
 
   return (
@@ -22,10 +23,11 @@ export default function RadioButtonsGroup({ radioSelected }) {
               onChange={handleChange}
               value='raw'
               name='radio-button-demo'
+              size='small'
             />
           }
           label='Raw Data'
-          labelPlacement='top'
+          labelPlacement='right'
         />
         <FormControlLabel
           value='right'
@@ -35,10 +37,11 @@ export default function RadioButtonsGroup({ radioSelected }) {
               onChange={handleChange}
               value='log'
               name='radio-button-demo'
+              size='small'
             />
           }
           label='Log Data'
-          labelPlacement='top'
+          labelPlacement='right'
         />
         <FormControlLabel
           value='top'
@@ -48,10 +51,11 @@ export default function RadioButtonsGroup({ radioSelected }) {
               onChange={handleChange}
               value='dydx'
               name='radio-button-demo'
+              size='small'
             />
           }
           label='Dy/Dx Data'
-          labelPlacement='top'
+          labelPlacement='right'
         />
       </RadioGroup>
     </FormControl>
