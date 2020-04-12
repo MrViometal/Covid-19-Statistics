@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
@@ -8,20 +9,24 @@ const useStyles = makeStyles({
   },
 });
 
-export default function DiscreteSlider() {
+export default function DiscreteSlider({ select, max, value, date }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
+      <Typography align='center' variant='h5'>
+        {date}
+      </Typography>
       <Slider
         defaultValue={0}
         aria-labelledby='discrete-slider-small-steps'
         step={1}
         marks
         min={0}
-        max={100}
+        max={max}
+        value={value}
         valueLabelDisplay='auto'
-        onChange={(event, value) => console.log(event, value)}
+        onChange={(event, value) => select(value)}
       />
     </div>
   );

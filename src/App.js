@@ -26,6 +26,9 @@ function App() {
   const [rawData, setRawData] = React.useState(null);
   const [baseChartData, setBaseChartData] = React.useState(null);
   const [filteredChartData, setFilteredChartData] = React.useState(null);
+
+  const [maxSlider, setMaxSlider] = React.useState(null);
+  const [sliderValue, setSliderValue] = React.useState(null);
   /* ***************************************************************** */
 
   //When Drop down menu is selected
@@ -36,7 +39,26 @@ function App() {
       });
       setBaseChartData(data);
       setFilteredChartData(data);
+      setSliderValue(0);
     }
+  };
+
+  //dynamically set range of slider
+  const maxSliderCounter = (data) => {
+    let result = data[0].data.length;
+    setMaxSlider(result);
+  };
+
+  //when slider value changes
+  const onSliderChange = (value) => {
+    setSliderValue(value);
+    let newObj = {};
+    newObj.id = baseChartData[0].id;
+    newObj.Lat = baseChartData[0].Lat;
+    newObj.Long = baseChartData[0].Long;
+    newObj.data = baseChartData[0].data.slice(value);
+    setFilteredChartData([newObj]);
+    console.log(newObj);
   };
 
   //handle When Radio buttons change
@@ -47,11 +69,14 @@ function App() {
       );
       setBaseChartData(currentData);
       setFilteredChartData(currentData);
+      setSliderValue(0);
     } else if (value == 'dydx') {
       let currentData = JsondydxFormatter(csvData).filter(
         (obj) => obj.id === filteredChartData[0].id
       );
       setBaseChartData(currentData);
+      setSliderValue(0);
+
       setFilteredChartData(currentData);
     } else if (value == 'raw') {
       let currentData = JsonFormatter(csvData).filter(
@@ -59,6 +84,7 @@ function App() {
       );
       setBaseChartData(currentData);
       setFilteredChartData(currentData);
+      setSliderValue(0);
     }
   };
 
@@ -74,7 +100,7 @@ function App() {
     let rawData = csv('time_series_covid19_deaths_global.csv').then((data) => {
       setcsvData(data);
       const raw = JsonFormatter(data);
-      // FIXME:
+      maxSliderCounter(raw);
       setRawData(raw);
       setBaseChartData(filterWorldData(raw));
       setFilteredChartData(filterWorldData(raw));
@@ -96,10 +122,21 @@ function App() {
         items={filterUniqueItems(rawData)}
         select={onCountrySelect}
       />
+
       <Radio radioSelected={handleRadioSelected} />
+
       <Pane style={{ width: 1250, height: 400, marginLeft: 10 }}>
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
       </Pane>
+
+      {filteredChartData && (
+        <Slider
+          select={onSliderChange}
+          max={maxSlider}
+          value={sliderValue}
+          date={filteredChartData[0].data[0].x}
+        />
+      )}
     </div>
   );
 }
