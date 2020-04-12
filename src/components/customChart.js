@@ -10,13 +10,13 @@ import { ResponsiveLine } from '@nivo/line';
 const MyResponsiveLine = ({ data }) => (
   <ResponsiveLine
     data={data}
-    margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+    margin={{ top: 50, right: 100, bottom: 68, left: 70 }}
     xScale={{ type: 'point' }}
     yScale={{
       type: 'linear',
       min: 'auto',
       max: 'auto',
-      stacked: true,
+      stacked: false,
       reverse: false,
     }}
     axisTop={null}
@@ -27,8 +27,8 @@ const MyResponsiveLine = ({ data }) => (
       tickPadding: 40,
       tickRotation: 300,
       legend: 'Days of Infection',
-      legendOffset: 55,
-      legendPosition: 'start',
+      legendOffset: 60,
+      legendPosition: 'middle',
     }}
     axisLeft={{
       orient: 'left',
@@ -36,7 +36,7 @@ const MyResponsiveLine = ({ data }) => (
       tickPadding: 5,
       tickRotation: 0,
       legend: 'Death Count',
-      legendOffset: -50,
+      legendOffset: -60,
       legendPosition: 'middle',
     }}
     colors={{ scheme: 'nivo' }}

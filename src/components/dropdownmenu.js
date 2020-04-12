@@ -4,11 +4,10 @@ import { Combobox } from 'evergreen-ui';
 class DropDownMenu extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   render() {
-    const { items } = this.props;
+    const { items, select } = this.props;
     return (
       <>
         <Combobox
@@ -16,7 +15,7 @@ class DropDownMenu extends Component {
           items={items}
           width={400}
           initialSelectedItem={'WORLD'}
-          onChange={(selected) => console.log(selected)}
+          onChange={(country) => select(country)}
           autocompleteProps={{}}
         />
       </>

@@ -28,6 +28,18 @@ function App() {
   const [filteredChartData, setFilteredChartData] = React.useState(null);
   /* ***************************************************************** */
 
+  //When Drop down menu is selected
+  const onCountrySelect = (country) => {
+    if (country) {
+      let data = rawData.filter((obj) => {
+        return obj.id === country;
+      });
+      setBaseChartData(data);
+      setFilteredChartData(data);
+    }
+  };
+
+  //handle When Radio buttons change
   const handleRadioSelected = (value) => {
     if (value == 'log') {
       let currentData = JsonlogFormatter(csvData).filter(
@@ -80,12 +92,12 @@ function App() {
 
   return (
     <div>
-      <DropDownMenu items={filterUniqueItems(rawData)} />
+      <DropDownMenu
+        items={filterUniqueItems(rawData)}
+        select={onCountrySelect}
+      />
       <Radio radioSelected={handleRadioSelected} />
-      <Pane
-        style={{ width: 1250, height: 400, marginLeft: 20 }}
-        className='app__chart'
-      >
+      <Pane style={{ width: 1250, height: 400, marginLeft: 10 }}>
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
       </Pane>
     </div>
