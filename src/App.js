@@ -32,7 +32,7 @@ function App() {
   const [maxSlider, setMaxSlider] = React.useState(null);
   const [sliderValue, setSliderValue] = React.useState(null);
 
-  const [radio, setRadio] = React.useState(null);
+  const [radio, setRadio] = React.useState('raw');
   /* ***************************************************************** */
 
   //When Drop down menu is selected
