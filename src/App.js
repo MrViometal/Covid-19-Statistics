@@ -4,6 +4,7 @@ import { Pane } from 'evergreen-ui';
 import DropDownMenu from './components/dropdownmenu';
 import Slider from './components/customSlider';
 import Chart from './components/customChart';
+import Radio from './components/customRadio';
 import data from './disposables/data.json';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Pane style={{ width: 1300, height: 400 }}>
         <Chart data={data} />
       </Pane>
+      <Radio />
     </div>
   );
 }
