@@ -13,12 +13,12 @@ import {
 } from './functions';
 
 //Components
-import { Pane } from 'evergreen-ui';
 import DropDownMenu from './components/dropdownmenu';
 import Slider from './components/customSlider';
 import Chart from './components/customChart';
 import Radio from './components/customRadio';
 import RGLMap from './components/Map';
+import { Pane, Spinner } from 'evergreen-ui';
 import data from './disposables/data.json';
 
 function App() {
@@ -82,6 +82,12 @@ function App() {
     <div>
       <DropDownMenu items={filterUniqueItems(rawData)} />
       <Radio radioSelected={handleRadioSelected} />
+      <Pane
+        style={{ width: 1250, height: 400, marginLeft: 20 }}
+        className='app__chart'
+      >
+        {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
+      </Pane>
     </div>
   );
 }

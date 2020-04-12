@@ -7,7 +7,7 @@ import { ResponsiveLine } from '@nivo/line';
 // website examples showcase many properties,
 // you'll often use just a few of them.
 
-const MyResponsiveLine = ({ data /* see data tab */ }) => (
+const MyResponsiveLine = ({ data }) => (
   <ResponsiveLine
     data={data}
     margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
@@ -24,23 +24,23 @@ const MyResponsiveLine = ({ data /* see data tab */ }) => (
     axisBottom={{
       orient: 'bottom',
       tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: 'transportation',
-      legendOffset: 36,
-      legendPosition: 'middle',
+      tickPadding: 40,
+      tickRotation: 300,
+      legend: 'Days of Infection',
+      legendOffset: 55,
+      legendPosition: 'start',
     }}
     axisLeft={{
       orient: 'left',
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'count',
-      legendOffset: -40,
+      legend: 'Death Count',
+      legendOffset: -50,
       legendPosition: 'middle',
     }}
     colors={{ scheme: 'nivo' }}
-    pointSize={10}
+    pointSize={5}
     pointColor={{ theme: 'background' }}
     pointBorderWidth={2}
     pointBorderColor={{ from: 'serieColor' }}
@@ -59,7 +59,7 @@ const MyResponsiveLine = ({ data /* see data tab */ }) => (
         itemWidth: 80,
         itemHeight: 20,
         itemOpacity: 0.75,
-        symbolSize: 12,
+        symbolSize: 24,
         symbolShape: 'circle',
         symbolBorderColor: 'rgba(0, 0, 0, .5)',
         effects: [
