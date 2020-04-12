@@ -4,7 +4,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-export default function RadioButtonsGroup({ radioSelected }) {
+export default function RadioButtonsGroup({ radioSelected, radio }) {
   const [selectedValue, setSelectedValue] = React.useState('raw');
 
   const handleChange = (event) => {
@@ -12,8 +12,13 @@ export default function RadioButtonsGroup({ radioSelected }) {
     radioSelected(event.target.value);
   };
 
+  React.useEffect(() => {
+    setSelectedValue(radio);
+  }, [radio]);
+
   return (
     <FormControl component='fieldset'>
+      {console.log('radio', radio)}
       <RadioGroup row aria-label='position' name='position' defaultValue='top'>
         <FormControlLabel
           value='top'

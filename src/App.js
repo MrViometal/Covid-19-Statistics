@@ -32,6 +32,7 @@ function App() {
   const [maxSlider, setMaxSlider] = React.useState(null);
   const [sliderValue, setSliderValue] = React.useState(null);
 
+  const [radio, setRadio] = React.useState(null);
   /* ***************************************************************** */
 
   //When Drop down menu is selected
@@ -43,6 +44,7 @@ function App() {
       setBaseChartData(data);
       setFilteredChartData(data);
       setSliderValue(0);
+      setRadio('raw');
     }
   };
 
@@ -126,7 +128,7 @@ function App() {
         select={onCountrySelect}
       />
 
-      <Radio radioSelected={handleRadioSelected} />
+      <Radio radioSelected={handleRadioSelected} radio={radio} />
 
       <Pane style={{ width: 1250, height: 400, marginLeft: 10 }}>
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
