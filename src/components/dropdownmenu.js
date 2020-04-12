@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Combobox } from 'evergreen-ui';
 
-const items = ['Banana', 'Orange', 'Apple', 'Mango'];
 class DropDownMenu extends Component {
   constructor(props) {
     super(props);
@@ -9,13 +8,14 @@ class DropDownMenu extends Component {
   }
 
   render() {
+    const { items } = this.props;
     return (
       <>
         <Combobox
           openOnFocus
           items={items}
           width={400}
-          initialSelectedItem={'Apple'}
+          initialSelectedItem={'WORLD'}
           onChange={(selected) => console.log(selected)}
           autocompleteProps={{}}
         />

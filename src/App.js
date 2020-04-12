@@ -15,10 +15,12 @@ import data from './disposables/data.json';
 
 function App() {
   const [csvData, setcsvData] = React.useState(null);
+  const [rawData, setRawData] = React.useState(null);
 
   const TurnCSVintoSmthUseful = () => {
     let rawData = csv('time_series_covid19_deaths_global.csv').then((data) => {
       setcsvData(data);
+      setRawData(JsonFormatter(data));
       return JsonFormatter(data);
     });
     return rawData;
@@ -28,9 +30,12 @@ function App() {
     TurnCSVintoSmthUseful();
   }, []);
 
-  return <div>{console.log(csvData)}</div>;
+  return (
+    <div>
+      <DropDownMenu items={filterUniqueItems(rawData)} />
+    </div>
+  );
 }
-
 export default App;
 
 //parse normal data
@@ -52,4 +57,20 @@ const JsonFormatter = (data) => {
     return newObj;
   });
   return result;
+};
+
+//filter countries from rawData to be sent to drop down menu
+const filterUniqueItems = (array) => {
+  let items = [];
+  let uniqueItems = [];
+  array &&
+    array.forEach((item) => {
+      Object.keys(item).forEach((key) => {
+        if (key == 'id') {
+          items.push(item[key]);
+        }
+      });
+      uniqueItems = Array.from(new Set(items));
+    });
+  return uniqueItems;
 };
