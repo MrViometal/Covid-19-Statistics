@@ -5,6 +5,7 @@ import DropDownMenu from './components/dropdownmenu';
 import Slider from './components/customSlider';
 import Chart from './components/customChart';
 import Radio from './components/customRadio';
+import RGLMap from './components/Map';
 import data from './disposables/data.json';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Chart data={data} />
       </Pane>
       <Radio />
+      <RGLMap />
     </div>
   );
 }
