@@ -13,8 +13,8 @@ class Map extends Component {
   state = {
     viewport: {
       height: 500,
-      latitude: 40.67,
-      longitude: -103.59,
+      latitude: 30.04,
+      longitude: 31.34,
       zoom: 3,
       bearing: 0,
       pitch: 0,
@@ -58,7 +58,7 @@ class Map extends Component {
       >
         <Source
           type='geojson'
-          data='https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson'
+          data={data}
           cluster={true}
           clusterMaxZoom={14}
           clusterRadius={50}

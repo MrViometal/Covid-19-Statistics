@@ -10,6 +10,8 @@ import {
   JsondydxFormatter,
   JsonlogFormatter,
   filterUniqueItems,
+  formMapData,
+  sumOfCasesValues,
 } from './functions';
 
 //Components
@@ -29,6 +31,7 @@ function App() {
 
   const [maxSlider, setMaxSlider] = React.useState(null);
   const [sliderValue, setSliderValue] = React.useState(null);
+
   /* ***************************************************************** */
 
   //When Drop down menu is selected
@@ -137,6 +140,8 @@ function App() {
           date={filteredChartData[0].data[0].x}
         />
       )}
+
+      {rawData && <RGLMap data={formMapData(sumOfCasesValues(rawData))} />}
     </div>
   );
 }
