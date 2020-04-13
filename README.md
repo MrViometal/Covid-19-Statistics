@@ -61,33 +61,67 @@ This section further talks about the components in bullet points for a better an
 - usage --> why is it used
 - input --> which component does it take input from
 - output --> what kind of output does it give out to other components
+- related-functions --> functions with which a component interact
 
 1. Chart:
    from: @nivo
    usage: shows data in an elegant and intuitive way
    input: data from App component
    output: none internally
+   related-functions: none
 
 2. RadioButtons:
    from: @material-ui/core
    usage: to alternate between scales (Normal, Logarthmic, Dy/Dx)
    input: none internally
    output: tells App component which button is clicked
+   related-functions:
+
+   1. handleRadioSelected: handles radio input and set states, and filters the chart data accordingly. Also resets slider value
 
 3. Slider:
    from: @material-ui/core
    usage: controls the start date of data passed to the Chart
    input: none internally
    output: tells App component its position (value)
+   related-functions:
+
+   1. onSliderChange: handles Silder value change, filters data passed to chart accordingly
 
 4. DropDownMenu
    from: evergreen-ui
    usage: to show different locations that can be chosen to reveal their data accordingly
    input: data of countries to show from App Component
    output: tells App component which country is chosen
+   related-functions:
+
+   1. onCountrySelect: handles DropDownMenu value change, filters data passed to chart accordingly
 
 5. Map:
    from: React-map-gl
    usage: to show infected locations around the globe
    input: data from App of infected locations
    output: none internally
+   related-functions: none
+
+## Inner Functions and their purpose
+
+1.  maxSliderCounter: counts the maximum value of the Slider based on the data extracted from csv file
+
+2.  filterWorldData: filters the WORLD record from the csv file when the application first mount
+
+3.  TurnCSVintoSmthUseful: gets called when the App component first mounts, turns csv file into JSON format to be further used in the application. Also sets the states 'rawData, BaseChartData, and FilteredChartData' to be used afterwards by the components
+
+    4.JsonFormatter: converts the basic JSON extracted from the csv file to the format needed to be used by the Chart down the line. Represents Raw Data without any operations.
+
+4.  JsonlogFormatter: likewise, converts the basic JSON to the format needed, however this time the values are on the log scale, as the chart doesn't provide it.
+
+5.  JsondydxFormatter: likewise, converts the basic JSON to the format needed, however this time the values are equal to Value(t-1) - Value(t), as the chart doesn't provide it.
+
+6.  filterUniqueItems: filters the unique values of the countries in the csv file to provide unique data to the DropDownMenu
+
+7.  sum: a basic function to sum values across array of objects, to be consumed by sumOfCasesValues
+
+8.  sumOfCasesValues: returns an array of objects with the same format, but instead of the data array of objects, it returns CasesSum field with the sum of all the values across the objects
+
+9.  formMapData: as the Map library requires an object with specific structure to be further consumed by the component, this function transformes the output of sumOfCasesValues to the object format needed.
