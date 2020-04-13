@@ -112,16 +112,16 @@ This section further talks about the components in bullet points for a better an
 
 3.  TurnCSVintoSmthUseful: gets called when the App component first mounts, turns csv file into JSON format to be further used in the application. Also sets the states 'rawData, BaseChartData, and FilteredChartData' to be used afterwards by the components
 
-    4.JsonFormatter: converts the basic JSON extracted from the csv file to the format needed to be used by the Chart down the line. Represents Raw Data without any operations.
+4.JsonFormatter: converts the basic JSON extracted from the csv file to the format needed to be used by the Chart down the line. Represents Raw Data without any operations.
 
-4.  JsonlogFormatter: likewise, converts the basic JSON to the format needed, however this time the values are on the log scale, as the chart doesn't provide it.
+5.  JsonlogFormatter: likewise, converts the basic JSON to the format needed, however this time the values are on the log scale, as the chart doesn't provide it.
 
-5.  JsondydxFormatter: likewise, converts the basic JSON to the format needed, however this time the values are equal to Value(t-1) - Value(t), as the chart doesn't provide it.
+6.  JsondydxFormatter: likewise, converts the basic JSON to the format needed, however this time the values are equal to Value(t-1) - Value(t), as the chart doesn't provide it.
 
-6.  filterUniqueItems: filters the unique values of the countries in the csv file to provide unique data to the DropDownMenu
+7.  filterUniqueItems: filters the unique values of the countries in the csv file to provide unique data to the DropDownMenu
 
-7.  sum: a basic function to sum values across array of objects, to be consumed by sumOfCasesValues
+8.  sum: a basic function to sum values across array of objects, to be consumed by sumOfCasesValues
 
-8.  sumOfCasesValues: returns an array of objects with the same format, but instead of the data array of objects, it returns CasesSum field with the sum of all the values across the objects
+9.  sumOfCasesValues: returns an array of objects with the same format, but instead of the data array of objects, it returns CasesSum field with the sum of all the values across the objects
 
-9.  formMapData: as the Map library requires an object with specific structure to be further consumed by the component, this function transformes the output of sumOfCasesValues to the object format needed.
+10. formMapData: as the Map library requires an object with specific structure to be further consumed by the component, this function transformes the output of sumOfCasesValues to the object format needed.
