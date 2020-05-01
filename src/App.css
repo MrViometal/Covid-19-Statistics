@@ -15,7 +15,7 @@
 
 .App-header {
     background-color: #282c34;
-    max-height: 10vh;
+    max-height: 50vh;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -36,6 +36,7 @@
 }
 
 .Chart {
+    display: flex;
     padding: 8px;
     justify-content: center;
     align-items: center;
@@ -59,5 +60,11 @@
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 750px) {
+    .App-header {
+        flex-direction: column;
     }
 }
