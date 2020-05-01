@@ -21,13 +21,14 @@ import Chart from './components/customChart';
 import Radio from './components/customRadio';
 import RGLMap from './components/Map';
 import { Pane, Spinner } from 'evergreen-ui';
-import data from './disposables/data.json';
 
 function App() {
   const [csvData, setcsvData] = React.useState(null);
   const [rawData, setRawData] = React.useState(null);
   const [baseChartData, setBaseChartData] = React.useState(null);
   const [filteredChartData, setFilteredChartData] = React.useState(null);
+
+  const [mapData, setMapData] = React.useState(null);
 
   const [maxSlider, setMaxSlider] = React.useState(null);
   const [sliderValue, setSliderValue] = React.useState(null);
@@ -68,28 +69,30 @@ function App() {
 
   //handle When Radio buttons change
   const handleRadioSelected = (value) => {
-    if (value == 'log') {
+    if (value === 'log') {
       let currentData = JsonlogFormatter(csvData).filter(
         (obj) => obj.id === filteredChartData[0].id
       );
       setBaseChartData(currentData);
       setFilteredChartData(currentData);
       setSliderValue(0);
-    } else if (value == 'dydx') {
+      setRadio('log');
+    } else if (value === 'dydx') {
       let currentData = JsondydxFormatter(csvData).filter(
         (obj) => obj.id === filteredChartData[0].id
       );
       setBaseChartData(currentData);
-      setSliderValue(0);
-
       setFilteredChartData(currentData);
-    } else if (value == 'raw') {
+      setSliderValue(0);
+      setRadio('dydx');
+    } else if (value === 'raw') {
       let currentData = JsonFormatter(csvData).filter(
         (obj) => obj.id === filteredChartData[0].id
       );
       setBaseChartData(currentData);
       setFilteredChartData(currentData);
       setSliderValue(0);
+      setRadio('raw');
     }
   };
 
@@ -99,20 +102,19 @@ function App() {
     setBaseChartData(result);
     return result;
   };
-
+  const FormatData = (data) => {
+    const raw = JsonFormatter(data);
+    maxSliderCounter(raw);
+    setRawData(raw);
+    setBaseChartData(filterWorldData(raw));
+    setFilteredChartData(filterWorldData(raw));
+    setMapData(formMapData(sumOfCasesValues(raw)));
+  }
   //Turn CSV into JSON and setChartData with it
   const TurnCSVintoSmthUseful = () => {
-    let rawData = csv('time_series_covid19_deaths_global.csv').then((data) => {
+    csv('time_series_covid19_deaths_global.csv').then((data) => {
       setcsvData(data);
-      const raw = JsonFormatter(data);
-      maxSliderCounter(raw);
-      setRawData(raw);
-      setBaseChartData(filterWorldData(raw));
-      setFilteredChartData(filterWorldData(raw));
-
-      return JsonFormatter(data);
     });
-    return rawData;
   };
 
   /* ***************************************************************** */
@@ -120,6 +122,10 @@ function App() {
   React.useEffect(() => {
     TurnCSVintoSmthUseful();
   }, []);
+
+  React.useEffect(() => {
+    csvData && FormatData(csvData);
+  }, [csvData])
 
   return (
     <Pane className='App'>
@@ -140,13 +146,9 @@ function App() {
         </Pane>
       </Pane>
 
-      <Pane
-        style={{ width: 1250, height: 400, marginLeft: 10 }}
-        className='Chart'
-      >
+      <Pane style={{ height: 400, marginLeft: 10 }} className='Chart'>
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
       </Pane>
-
       <Pane className='Slider'>
         {filteredChartData && (
           <Slider
@@ -157,8 +159,7 @@ function App() {
           />
         )}
       </Pane>
-
-      {rawData && <RGLMap data={formMapData(sumOfCasesValues(rawData))} />}
+      {mapData && <RGLMap data={mapData} />}
     </Pane>
   );
 }
