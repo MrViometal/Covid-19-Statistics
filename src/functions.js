@@ -10,7 +10,7 @@ export const JsonFormatter = (data) => {
     newObj.data = [];
     Object.keys(obj).forEach((key) => {
       if (
-        /^(0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-]\d{2}$/.test(key)
+        /^(0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])[/-]\d{2}$/.test(key)
       ) {
         // if it matches the date format
         newObj.data.push({ x: key, y: obj[key] });
@@ -35,7 +35,7 @@ export const JsondydxFormatter = (data) => {
 
     Object.keys(obj).forEach((key) => {
       if (
-        /^(0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-]\d{2}$/.test(key)
+        /^(0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])[/-]\d{2}$/.test(key)
       ) {
         // if it matches the date format
         newObj.data.push({ x: key, y: obj[key] });
@@ -62,7 +62,7 @@ export const JsonlogFormatter = (data) => {
     newObj.data = [];
     Object.keys(obj).forEach((key) => {
       if (
-        /^(0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])[\/\-]\d{2}$/.test(key)
+        /^(0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])[/-]\d{2}$/.test(key)
       ) {
         // if it matches the date format
         newObj.data.push({ x: key, y: Math.log(obj[key]) });
@@ -80,7 +80,7 @@ export const filterUniqueItems = (array) => {
   array &&
     array.forEach((item) => {
       Object.keys(item).forEach((key) => {
-        if (key == 'id') {
+        if (key === 'id') {
           items.push(item[key]);
         }
       });
@@ -104,7 +104,7 @@ export const sumOfCasesValues = (rawData) => {
     newObj.id = obj.id;
     newObj.Lat = obj.Lat;
     newObj.Long = obj.Long;
-    newObj.CasesSum = sum(obj.data, 'y');
+    newObj.CasesSum = [...Array(sum(obj.data, 'y')).keys()];
     return newObj;
   });
   return result;
@@ -121,21 +121,25 @@ export const formMapData = (summedArrayOfObjects) => {
     },
   };
   result.features = [];
-  summedArrayOfObjects.map((obj) => {
-    let newObj = {};
-    newObj.type = 'Feature';
-    newObj.properties = {
-      id: obj.id + obj.Lat,
-      mag: obj.CasesSum,
-      time: '0',
-      felt: null,
-      tsunami: 0,
-    };
-    newObj.geometry = {
-      type: 'Point',
-      coordinates: [Number(obj.Long), Number(obj.Lat), 0.0],
-    };
-    result.features.push(newObj);
-  });
+  summedArrayOfObjects
+    .filter((item) => item.id !== 'WORLD')
+    .map((obj) => {
+      obj.CasesSum.map((arrayItem) => {
+        let newObj = {};
+        newObj.type = 'Feature';
+        newObj.properties = {
+          id: obj.id + '_lat_ ' + obj.Lat + '_long_ ' + obj.Long + arrayItem,
+          mag: 1,
+          time: '0',
+          felt: null,
+          tsunami: 0,
+        };
+        newObj.geometry = {
+          type: 'Point',
+          coordinates: [Number(obj.Long), Number(obj.Lat), 0.0],
+        };
+        result.features.push(newObj);
+      });
+    });
   return result;
 };
