@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { Combobox } from 'evergreen-ui';
 
 class DropDownMenu extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const { items, select } = this.props;
