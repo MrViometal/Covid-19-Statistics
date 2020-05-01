@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MapGL, { Source, Layer } from 'react-map-gl';
+
 import {
   clusterLayer,
   clusterCountLayer,
@@ -26,12 +27,16 @@ class Map extends Component {
   _onViewportChange = (viewport) => this.setState({ viewport });
 
   _onClick = (event) => {
+
     const feature = event.features[0];
-    const clusterId = feature.properties.cluster_id;
+    const clusterId = feature ? feature.properties.cluster_id : null;
 
     const mapboxSource = this._sourceRef.current.getSource();
 
-    mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+    clusterId && mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+      if (err) {
+        return;
+      }
       this._onViewportChange({
         ...this.state.viewport,
         longitude: feature.geometry.coordinates[0],
