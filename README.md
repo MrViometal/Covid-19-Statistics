@@ -68,6 +68,7 @@ This section further talks about the components in bullet points for a better an
    usage: shows data in an elegant and intuitive way
    input: data from App component
    output: none internally
+
    related-functions: none
 
 2. RadioButtons:
@@ -75,6 +76,7 @@ This section further talks about the components in bullet points for a better an
    usage: to alternate between scales (Normal, Logarthmic, Dy/Dx)
    input: none internally
    output: tells App component which button is clicked
+
    related-functions:
 
    1. handleRadioSelected: handles radio input and set states, and filters the chart data accordingly. Also resets slider value
@@ -84,6 +86,7 @@ This section further talks about the components in bullet points for a better an
    usage: controls the start date of data passed to the Chart
    input: none internally
    output: tells App component its position (value)
+
    related-functions:
 
    1. onSliderChange: handles Silder value change, filters data passed to chart accordingly
@@ -93,15 +96,17 @@ This section further talks about the components in bullet points for a better an
    usage: to show different locations that can be chosen to reveal their data accordingly
    input: data of countries to show from App Component
    output: tells App component which country is chosen
-   related-functions:
+
+   related-functions: 
 
    1. onCountrySelect: handles DropDownMenu value change, filters data passed to chart accordingly
 
 5. Map:
    from: React-map-gl
-   usage: to show infected locations around the globe
+   usage: to show infected locations around the globe and number of cases per location in clusters
    input: data from App of infected locations
    output: none internally
+   
    related-functions: none
 
 ## Inner Functions and their purpose
