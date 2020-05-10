@@ -42,10 +42,24 @@
     align-items: center;
 }
 
+.Chart-Map-Container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Map {
+    display: flex;
+    height: 500px;
+    justify-content: center;
+    align-items: center;
+}
+
 .Slider {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 5px;
     margin-bottom: 20px;
 }
 
