@@ -22,7 +22,7 @@ export const JsonFormatter = (data) => {
 };
 
 //parse data dy/dx format
-export const JsondydxFormatter = (data) => {
+export const JsonDyDxFormatter = (data) => {
   const result = data.map((obj) => {
     let diff = {};
     diff.id = obj.Place;
@@ -53,7 +53,7 @@ export const JsondydxFormatter = (data) => {
 };
 
 //parse data log format
-export const JsonlogFormatter = (data) => {
+export const JsonLogFormatter = (data) => {
   const result = data.map((obj) => {
     let newObj = {};
     newObj.id = obj.Place;
@@ -65,7 +65,13 @@ export const JsonlogFormatter = (data) => {
         /^(0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])[/-]\d{2}$/.test(key)
       ) {
         // if it matches the date format
-        newObj.data.push({ x: key, y: Math.log(obj[key]) });
+
+        //if is it not zero
+        if (obj[key] == 0) {
+          newObj.data.push({ x: key, y: null });
+        } else {
+          newObj.data.push({ x: key, y: Math.log(obj[key]) });
+        }
       }
     });
     return newObj;
