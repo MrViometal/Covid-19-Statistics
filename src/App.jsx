@@ -3,6 +3,7 @@ import './App.css';
 
 //Libraries
 import { csv } from 'd3';
+import { Pane, Spinner } from 'evergreen-ui';
 
 //functions
 import {
@@ -12,15 +13,14 @@ import {
   filterUniqueItems,
   formMapData,
   sumOfCasesValues,
-} from './functions';
+} from './Utils/functions';
 
 //Components
-import DropDownMenu from './components/dropDownMenu';
-import Slider from './components/customSlider';
-import Chart from './components/customChart';
-import Radio from './components/customRadio';
-import RGLMap from './components/Map';
-import { Pane, Spinner } from 'evergreen-ui';
+import DropDownMenu from './components/dropDownMenu.jsx';
+import Slider from './components/customSlider.jsx';
+import Chart from './components/customChart.jsx';
+import Radio from './components/customRadio.jsx';
+import RGLMap from './components/Map.jsx';
 
 function App() {
   const [csvData, setCsvData] = React.useState(null);

@@ -6,7 +6,7 @@ import {
   clusterLayer,
   clusterCountLayer,
   unclusteredPointLayer,
-} from './layers';
+} from '../Utils/layers';
 
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoibXJ2aW9tZXRhbCIsImEiOiJjazh2ZmFxbzYwaGllM2pvNzB1NHVwOGhwIn0.Zrv_aUz_frAc8QMDDjhgLQ'; // Set your mapbox token here
