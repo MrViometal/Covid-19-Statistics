@@ -7,15 +7,15 @@ import { csv } from 'd3';
 //functions
 import {
   JsonFormatter,
-  JsondydxFormatter,
-  JsonlogFormatter,
+  JsonDyDxFormatter,
+  JsonLogFormatter,
   filterUniqueItems,
   formMapData,
   sumOfCasesValues,
 } from './functions';
 
 //Components
-import DropDownMenu from './components/dropdownmenu';
+import DropDownMenu from './components/dropDownMenu';
 import Slider from './components/customSlider';
 import Chart from './components/customChart';
 import Radio from './components/customRadio';
@@ -23,7 +23,7 @@ import RGLMap from './components/Map';
 import { Pane, Spinner } from 'evergreen-ui';
 
 function App() {
-  const [csvData, setcsvData] = React.useState(null);
+  const [csvData, setCsvData] = React.useState(null);
   const [rawData, setRawData] = React.useState(null);
   const [baseChartData, setBaseChartData] = React.useState(null);
   const [filteredChartData, setFilteredChartData] = React.useState(null);
@@ -67,31 +67,28 @@ function App() {
 
   //handle When Radio buttons change
   const handleRadioSelected = (value) => {
+
+    const filterPlaceDataFromCSVFile = csvData
+      .filter((obj) => obj.Place === filteredChartData[0].id);
+
+    let FormattedData;
+
     if (value === 'log') {
-      let currentData = JsonlogFormatter(csvData).filter(
-        (obj) => obj.id === filteredChartData[0].id
-      );
-      setBaseChartData(currentData);
-      setFilteredChartData(currentData);
-      setSliderValue(0);
+      FormattedData = JsonLogFormatter(filterPlaceDataFromCSVFile)
       setRadio('log');
+
     } else if (value === 'dydx') {
-      let currentData = JsondydxFormatter(csvData).filter(
-        (obj) => obj.id === filteredChartData[0].id
-      );
-      setBaseChartData(currentData);
-      setFilteredChartData(currentData);
-      setSliderValue(0);
+      FormattedData = JsonDyDxFormatter(filterPlaceDataFromCSVFile)
       setRadio('dydx');
+
     } else if (value === 'raw') {
-      let currentData = JsonFormatter(csvData).filter(
-        (obj) => obj.id === filteredChartData[0].id
-      );
-      setBaseChartData(currentData);
-      setFilteredChartData(currentData);
-      setSliderValue(0);
+      FormattedData = JsonFormatter(filterPlaceDataFromCSVFile)
       setRadio('raw');
     }
+
+    setBaseChartData(FormattedData);
+    setFilteredChartData(FormattedData);
+    setSliderValue(0);
   };
 
   //basic on mount world data filter for first time
@@ -110,16 +107,16 @@ function App() {
     setMapData(formMapData(sumOfCasesValues(raw)));
   }
   //Turn CSV into JSON and setChartData with it
-  const TurnCSVintoSmthUseful = () => {
+  const ParseCsvIntoJSON = () => {
     csv('time_series_covid19_deaths_global.csv').then((data) => {
-      setcsvData(data);
+      setCsvData(data);
     });
   };
 
   /* ***************************************************************** */
 
   React.useEffect(() => {
-    TurnCSVintoSmthUseful();
+    ParseCsvIntoJSON();
   }, []);
 
   React.useEffect(() => {
