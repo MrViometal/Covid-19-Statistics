@@ -60,11 +60,9 @@ function App() {
     setSliderValue(value);
     let newObj = {};
     newObj.id = baseChartData[0].id;
-    newObj.Lat = baseChartData[0].Lat;
-    newObj.Long = baseChartData[0].Long;
     newObj.data = baseChartData[0].data.slice(value);
     setFilteredChartData([newObj]);
-    console.log(newObj);
+    // console.log({ newObj });
   };
 
   //handle When Radio buttons change
@@ -102,6 +100,7 @@ function App() {
     setBaseChartData(result);
     return result;
   };
+
   const FormatData = (data) => {
     const raw = JsonFormatter(data);
     maxSliderCounter(raw);
@@ -125,10 +124,12 @@ function App() {
 
   React.useEffect(() => {
     csvData && FormatData(csvData);
+    // console.log('set values')
   }, [csvData])
 
   return (
     <Pane className='App'>
+
       <Pane className='App-header'>
         <Pane className='DDM'>
           <DropDownMenu
@@ -146,20 +147,20 @@ function App() {
         </Pane>
       </Pane>
 
-      <Pane style={{ height: 400, marginLeft: 10 }} className='Chart'>
+      <Pane className='Chart' style={{ height: 500, marginLeft: 10 }} >
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
       </Pane>
+
       <Pane className='Slider'>
-        {filteredChartData && (
-          <Slider
-            select={onSliderChange}
-            max={maxSlider}
-            value={sliderValue}
-            date={filteredChartData[0].data[0].x}
-          />
-        )}
+        <Slider
+          select={onSliderChange}
+          max={maxSlider}
+          value={sliderValue}
+          data={baseChartData} />
       </Pane>
-      {mapData && <RGLMap data={mapData} />}
+      <Pane className='Map'>  
+      </Pane>
+     {mapData && <RGLMap data={mapData} />}
     </Pane>
   );
 }

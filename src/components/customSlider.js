@@ -9,14 +9,21 @@ const useStyles = makeStyles({
   },
 });
 
-export default function DiscreteSlider({ select, max, value, date }) {
+export default function DiscreteSlider({ select, max, value, data }) {
   const classes = useStyles();
+  const [date, setDate] = React.useState(null)
+
+  React.useEffect(() => {
+    data && setDate(data[0].data[value || 0].x)
+  }, [value, data])
 
   return (
     <div className={classes.root}>
-      <Typography align='center' variant='h5'>
-        {date}
-      </Typography>
+      {date &&
+        <Typography align='center' variant='h5'>
+          {`Since ${date}`}
+        </Typography>
+      }
       <Slider
         defaultValue={0}
         aria-labelledby='discrete-slider-small-steps'
