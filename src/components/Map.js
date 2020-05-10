@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MapGL, { Source, Layer } from 'react-map-gl';
+import { Spinner } from 'evergreen-ui'
 
 import {
   clusterLayer,
@@ -51,30 +52,38 @@ class Map extends Component {
     const { viewport } = this.state;
     const { data } = this.props;
 
-    return (
-      <MapGL
-        {...viewport}
-        width='100%'
-        mapStyle='mapbox://styles/mapbox/dark-v9'
-        onViewportChange={this._onViewportChange}
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        interactiveLayerIds={[clusterLayer.id]}
-        onClick={this._onClick}
-      >
-        <Source
-          type='geojson'
-          data={data}
-          cluster={true}
-          clusterMaxZoom={14}
-          clusterRadius={50}
-          ref={this._sourceRef}
+    if (data) {
+      return (
+        <MapGL
+          {...viewport}
+          width='100%'
+          mapStyle='mapbox://styles/mapbox/dark-v9'
+          onViewportChange={this._onViewportChange}
+          mapboxApiAccessToken={MAPBOX_TOKEN}
+          interactiveLayerIds={[clusterLayer.id]}
+          onClick={this._onClick}
         >
-          <Layer {...clusterLayer} />
-          <Layer {...clusterCountLayer} />
-          <Layer {...unclusteredPointLayer} />
-        </Source>
-      </MapGL>
-    );
+          <Source
+            type='geojson'
+            data={data}
+            cluster={true}
+            clusterMaxZoom={14}
+            clusterRadius={50}
+            ref={this._sourceRef}
+          >
+            <Layer {...clusterLayer} />
+            <Layer {...clusterCountLayer} />
+            <Layer {...unclusteredPointLayer} />
+          </Source>
+        </MapGL>
+      )
+    } else
+      return (
+        <div>
+          <Spinner />
+        </div>
+
+      );
   }
 }
 export default Map;

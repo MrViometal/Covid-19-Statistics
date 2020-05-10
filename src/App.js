@@ -158,9 +158,11 @@ function App() {
           value={sliderValue}
           data={baseChartData} />
       </Pane>
-      <Pane className='Map'>  
+
+      <Pane className='Map'>
+        <RGLMap data={mapData} />
       </Pane>
-     {mapData && <RGLMap data={mapData} />}
+
     </Pane>
   );
 }
