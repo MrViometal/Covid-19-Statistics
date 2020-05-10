@@ -40,8 +40,9 @@ const MyResponsiveLine = ({ data }) => (
       legendOffset: -60,
       legendPosition: 'middle',
     }}
-    colors={{ scheme: 'nivo' }}
-    pointSize={5}
+    colors={{ scheme: 'dark2' }}
+    lineWidth={5}
+    pointSize={10}
     pointColor={{ theme: 'background' }}
     pointBorderWidth={2}
     pointBorderColor={{ from: 'serieColor' }}
