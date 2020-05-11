@@ -22,7 +22,7 @@ import Chart from './components/customChart.jsx';
 import Radio from './components/customRadio.jsx';
 import RGLMap from './components/Map.jsx';
 
-function App() {
+const App = () => {
   const [csvData, setCsvData] = React.useState(null);
   const [rawData, setRawData] = React.useState(null);
   const [baseChartData, setBaseChartData] = React.useState(null);
@@ -98,31 +98,25 @@ function App() {
     return result;
   };
 
-  const FormatData = (data) => {
-    const raw = JsonFormatter(data);
-    maxSliderCounter(raw);
-    setRawData(raw);
-    setBaseChartData(filterWorldData(raw));
-    setFilteredChartData(filterWorldData(raw));
-    setMapData(formMapData(sumOfCasesValues(raw)));
-  }
+
   //Turn CSV into JSON and setChartData with it
-  const ParseCsvIntoJSON = () => {
-    csv('time_series_covid19_deaths_global.csv').then((data) => {
-      setCsvData(data);
-    });
-  };
-
-  /* ***************************************************************** */
-
   React.useEffect(() => {
-    ParseCsvIntoJSON();
-  }, []);
+    const ParseCsvIntoJsonFormatData = () => {
+      csv('time_series_covid19_deaths_global.csv').then((data) => {
+        setCsvData(data);
+        const raw = JsonFormatter(data);
+        maxSliderCounter(raw);
+        setRawData(raw);
+        setBaseChartData(filterWorldData(raw));
+        setFilteredChartData(filterWorldData(raw));
+        setMapData(formMapData(sumOfCasesValues(raw)));
+      })
+    }
 
-  React.useEffect(() => {
-    csvData && FormatData(csvData);
-    // console.log('set values')
-  }, [csvData])
+    ParseCsvIntoJsonFormatData();
+    console.log('here')
+  }, [])
+
 
   return (
     <Pane className='App'>
@@ -144,7 +138,8 @@ function App() {
         </Pane>
       </Pane>
 
-      <Pane className='Chart' style={{ height: 500, marginLeft: 10 }} >
+      <Pane className='Chart'
+        style={{ height: 500, marginLeft: 10 }} >
         {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
       </Pane>
 
