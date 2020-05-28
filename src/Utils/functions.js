@@ -67,7 +67,7 @@ export const JsonLogFormatter = (data) => {
         // if it matches the date format
 
         //if is it not zero
-        if (obj[key] == 0) {
+        if (obj[key] === '0') {
           newObj.data.push({ x: key, y: null });
         } else {
           newObj.data.push({ x: key, y: Math.log(obj[key]) });
@@ -145,7 +145,9 @@ export const formMapData = (summedArrayOfObjects) => {
           coordinates: [Number(obj.Long), Number(obj.Lat), 0.0],
         };
         result.features.push(newObj);
+        return null
       });
+      return null
     });
   return result;
 };

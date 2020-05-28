@@ -3,7 +3,7 @@ import './App.css';
 
 //Libraries
 import { csv } from 'd3';
-import { Pane, Spinner } from 'evergreen-ui';
+import { Pane } from 'evergreen-ui';
 
 //functions
 import {
@@ -23,7 +23,9 @@ import Radio from './components/customRadio.jsx';
 import RGLMap from './components/Map.jsx';
 
 const App = () => {
-  const [csvData, setCsvData] = React.useState(null);
+  const [csvData, setCsvData] = React.useState(() =>
+    JSON.parse(localStorage.getItem('csvData'))
+  );
   const [rawData, setRawData] = React.useState(null);
   const [baseChartData, setBaseChartData] = React.useState(null);
   const [filteredChartData, setFilteredChartData] = React.useState(null);
@@ -67,25 +69,20 @@ const App = () => {
 
   //handle When Radio buttons change
   const handleRadioSelected = (value) => {
-
-    const filterPlaceDataFromCSVFile = csvData
-      .filter((obj) => obj.Place === filteredChartData[0].id);
+    const filterPlaceDataFromCSVFile = csvData.filter(
+      (obj) => obj.Place === filteredChartData[0].id
+    );
 
     let FormattedData;
 
-    if (value === 'log') {
-      FormattedData = JsonLogFormatter(filterPlaceDataFromCSVFile)
-      setRadio('log');
+    if (value === 'log')
+      FormattedData = JsonLogFormatter(filterPlaceDataFromCSVFile);
+    else if (value === 'dydx')
+      FormattedData = JsonDyDxFormatter(filterPlaceDataFromCSVFile);
+    else if (value === 'raw')
+      FormattedData = JsonFormatter(filterPlaceDataFromCSVFile);
 
-    } else if (value === 'dydx') {
-      FormattedData = JsonDyDxFormatter(filterPlaceDataFromCSVFile)
-      setRadio('dydx');
-
-    } else if (value === 'raw') {
-      FormattedData = JsonFormatter(filterPlaceDataFromCSVFile)
-      setRadio('raw');
-    }
-
+    setRadio(value);
     setBaseChartData(FormattedData);
     setFilteredChartData(FormattedData);
     setSliderValue(0);
@@ -98,29 +95,29 @@ const App = () => {
     return result;
   };
 
-
   //Turn CSV into JSON and setChartData with it
   React.useEffect(() => {
     const ParseCsvIntoJsonFormatData = () => {
       csv('time_series_covid19_deaths_global.csv').then((data) => {
         setCsvData(data);
         const raw = JsonFormatter(data);
-        maxSliderCounter(raw);
         setRawData(raw);
         setBaseChartData(filterWorldData(raw));
         setFilteredChartData(filterWorldData(raw));
         setMapData(formMapData(sumOfCasesValues(raw)));
-      })
-    }
+        maxSliderCounter(raw);
+      });
+    };
 
     ParseCsvIntoJsonFormatData();
-    console.log('here')
-  }, [])
+  }, []);
 
+  React.useEffect(() => {
+    localStorage.setItem('csvData', JSON.stringify(csvData));
+  }, [csvData]);
 
   return (
     <Pane className='App'>
-
       <Pane className='App-header'>
         <Pane className='DDM'>
           <DropDownMenu
@@ -138,9 +135,8 @@ const App = () => {
         </Pane>
       </Pane>
 
-      <Pane className='Chart'
-        style={{ height: 500, marginLeft: 10 }} >
-        {filteredChartData ? <Chart data={filteredChartData} /> : <Spinner />}
+      <Pane className='Chart' style={{ height: 500, marginLeft: 10 }}>
+        <Chart data={filteredChartData} />
       </Pane>
 
       <Pane className='Slider'>
@@ -148,14 +144,14 @@ const App = () => {
           select={onSliderChange}
           max={maxSlider}
           value={sliderValue}
-          data={baseChartData} />
+          data={baseChartData}
+        />
       </Pane>
 
       <Pane className='Map'>
         <RGLMap data={mapData} />
       </Pane>
-
     </Pane>
   );
-}
+};
 export default App;
