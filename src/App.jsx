@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import './App.css';
 
 //Libraries
@@ -13,6 +13,8 @@ import {
   filterUniqueItems,
   formMapData,
   sumOfCasesValues,
+  filterWorldData,
+  maxSliderCounter,
 } from './Utils/functions';
 
 //Components
@@ -22,21 +24,81 @@ import Chart from './components/customChart.jsx';
 import Radio from './components/customRadio.jsx';
 import RGLMap from './components/Map.jsx';
 
+function dataReducer(state, action) {
+  switch (action.type) {
+    case 'CSV_TO_JSON':
+      return {
+        ...state,
+        haveData: action.payload ? 'true' : 'false',
+        csvData: action.payload,
+      };
+
+    case 'FORMAT_DATA':
+      const raw = JsonFormatter(state.csvData);
+      return {
+        ...state,
+        rawData: raw,
+        baseChartData: filterWorldData(raw),
+        filteredChartData: filterWorldData(raw),
+        mapData: formMapData(sumOfCasesValues(raw)),
+        maxSlider: maxSliderCounter(raw),
+      };
+
+    case 'ON_COUNTRY_SELECT':
+      return {
+        ...state,
+        baseChartData: action.payload,
+        filteredChartData: action.payload,
+        sliderValue: 0,
+        radio: 'raw',
+      };
+
+    case 'ON_SLIDER_CHANGE':
+      return {
+        ...state,
+        filteredChartData: [action.payload.newObj],
+        sliderValue: action.payload.value,
+      };
+
+    case 'ON_RADIO_CHANGE':
+      return {
+        ...state,
+        radio: action.payload.value,
+        baseChartData: action.payload.FormattedData,
+        filteredChartData: action.payload.FormattedData,
+        sliderValue: 0,
+      };
+
+    default:
+      return state;
+  }
+}
+
+const initialState = {
+  haveData: false,
+  csvData: null,
+  rawData: null,
+  baseChartData: null,
+  filteredChartData: null,
+  mapData: null,
+  maxSlider: null,
+  sliderValue: 0,
+  radio: 'raw',
+};
+
 const App = () => {
-  const [csvData, setCsvData] = React.useState(() =>
-    JSON.parse(localStorage.getItem('csvData'))
-  );
-  const [rawData, setRawData] = React.useState(null);
-  const [baseChartData, setBaseChartData] = React.useState(null);
-  const [filteredChartData, setFilteredChartData] = React.useState(null);
-
-  const [mapData, setMapData] = React.useState(null);
-
-  const [maxSlider, setMaxSlider] = React.useState(null);
-  const [sliderValue, setSliderValue] = React.useState(null);
-
-  const [radio, setRadio] = React.useState('raw');
-  /* ***************************************************************** */
+  const [state, dispatch] = useReducer(dataReducer, initialState);
+  const [data, setInitialData] = React.useState(null);
+  const {
+    csvData,
+    rawData,
+    baseChartData,
+    filteredChartData,
+    mapData,
+    maxSlider,
+    sliderValue,
+    radio,
+  } = state;
 
   //When Drop down menu is selected
   const onCountrySelect = (country) => {
@@ -44,35 +106,23 @@ const App = () => {
       let data = rawData.filter((obj) => {
         return obj.id === country;
       });
-      setBaseChartData(data);
-      setFilteredChartData(data);
-      setSliderValue(0);
-      setRadio('raw');
+      dispatch({ type: 'ON_COUNTRY_SELECT', payload: data });
     }
-  };
-
-  //dynamically set range of slider
-  const maxSliderCounter = (data) => {
-    let result = data[0].data.length;
-    setMaxSlider(result);
   };
 
   //when slider value changes
   const onSliderChange = (value) => {
-    setSliderValue(value);
     let newObj = {};
     newObj.id = baseChartData[0].id;
     newObj.data = baseChartData[0].data.slice(value);
-    setFilteredChartData([newObj]);
-    // console.log({ newObj });
+    dispatch({ type: 'ON_SLIDER_CHANGE', payload: { newObj, value } });
   };
 
   //handle When Radio buttons change
-  const handleRadioSelected = (value) => {
+  const onRadioChange = (value) => {
     const filterPlaceDataFromCSVFile = csvData.filter(
       (obj) => obj.Place === filteredChartData[0].id
     );
-
     let FormattedData;
 
     if (value === 'log')
@@ -81,40 +131,33 @@ const App = () => {
       FormattedData = JsonDyDxFormatter(filterPlaceDataFromCSVFile);
     else if (value === 'raw')
       FormattedData = JsonFormatter(filterPlaceDataFromCSVFile);
-
-    setRadio(value);
-    setBaseChartData(FormattedData);
-    setFilteredChartData(FormattedData);
-    setSliderValue(0);
+    dispatch({
+      type: 'ON_RADIO_CHANGE',
+      payload: { value, FormattedData },
+    });
   };
 
-  //basic on mount world data filter for first time
-  const filterWorldData = (data) => {
-    let result = data.filter((obj) => obj.id === 'WORLD');
-    setBaseChartData(result);
-    return result;
-  };
-
-  //Turn CSV into JSON and setChartData with it
+  //Turn CSV into JSON and setInitialData with it with an IIFE
   React.useEffect(() => {
-    const ParseCsvIntoJsonFormatData = () => {
+    (function hey() {
       csv('time_series_covid19_deaths_global.csv').then((data) => {
-        setCsvData(data);
-        const raw = JsonFormatter(data);
-        setRawData(raw);
-        setBaseChartData(filterWorldData(raw));
-        setFilteredChartData(filterWorldData(raw));
-        setMapData(formMapData(sumOfCasesValues(raw)));
-        maxSliderCounter(raw);
+        setInitialData(data);
       });
-    };
-
-    ParseCsvIntoJsonFormatData();
+    })();
   }, []);
 
+  //When data promise is resolved, dispatch an action to turn it into JSON
   React.useEffect(() => {
-    localStorage.setItem('csvData', JSON.stringify(csvData));
-  }, [csvData]);
+    data && dispatch({ type: 'CSV_TO_JSON', payload: data });
+  }, [data]);
+
+  //When data is available in JSON format, dispatch an action to Format it into its desired shapes and set state with it
+  React.useEffect(() => {
+    !!state.haveData && dispatch({ type: 'FORMAT_DATA' });
+    // localStorage.setItem('csvData', JSON.stringify(csvData));
+    // !!csvData && dispatch({ type: 'FORMAT_DATA' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.haveData]);
 
   return (
     <Pane className='App'>
@@ -128,7 +171,7 @@ const App = () => {
 
         <Pane className='Radio'>
           <Radio
-            radioSelected={handleRadioSelected}
+            radioSelected={onRadioChange}
             radio={radio}
             className='Radio'
           />

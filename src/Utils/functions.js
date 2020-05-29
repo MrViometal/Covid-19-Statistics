@@ -1,4 +1,4 @@
-/*   App data manipulation Functions   */
+//*  App data manipulation Functions   */
 
 //parse normal data
 export const JsonFormatter = (data) => {
@@ -95,7 +95,7 @@ export const filterUniqueItems = (array) => {
   return uniqueItems;
 };
 
-/*   Map data manipulation Functions   */
+//*   Map data manipulation Functions   */
 
 //sum function to be used internally
 export const sum = (array, key) => {
@@ -105,7 +105,7 @@ export const sum = (array, key) => {
 
 //to produce sum of cases in an entry
 export const sumOfCasesValues = (rawData) => {
-  let result = rawData.map((obj) => {
+  return rawData.map((obj) => {
     let newObj = {};
     newObj.id = obj.id;
     newObj.Lat = obj.Lat;
@@ -113,7 +113,6 @@ export const sumOfCasesValues = (rawData) => {
     newObj.CasesSum = [...Array(sum(obj.data, 'y')).keys()];
     return newObj;
   });
-  return result;
 };
 
 //to form map data
@@ -145,9 +144,22 @@ export const formMapData = (summedArrayOfObjects) => {
           coordinates: [Number(obj.Long), Number(obj.Lat), 0.0],
         };
         result.features.push(newObj);
-        return null
+        return null;
       });
-      return null
+      return null;
     });
+
   return result;
+};
+
+//* Helper Functions */
+
+//basic on mount world data filter for first time
+export const filterWorldData = (data) => {
+  return data.filter((obj) => obj.id === 'WORLD');
+};
+
+//dynamically set range of slider
+export const maxSliderCounter = (data) => {
+  return data[0].data.length;
 };
